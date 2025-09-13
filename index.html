@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Chá Revelação — Convite</title>
+<meta name="description" content="Convite online para o Chá Revelação — confirmação, agenda, mapa e presentes.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="./img/bg-mobile-1440x2560.webp?v=3">
+<link rel="preload" as="audio" href="./audio/trilha.mp3">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+  :root{
+    --brown-dark:#2A251F; --brown:#3D342A;
+    --label-contrast:#4A3C35; --subtitle-contrast:#5A5A5A;
+    --gold:#E6C368; --gold-light:#F2D085;
+    --powder:#C7D5E0; --powder-deep:#6F8D98; --sage:#8FA693;
+    --card-alpha:.65;
+    --serif:'Playfair Display',serif; --sans:'Inter',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth; -webkit-tap-highlight-color:transparent}
+  body{font-family:var(--sans); color:var(--brown-dark); background:#fff; line-height:1.6; overflow-x:hidden; min-height:100svh; position:relative}
+
+  /* SINGLE BACKGROUND LAYER (no duplicates) */
+  .bg-wrap{position:fixed; inset:0; z-index:-2; pointer-events:none;
+    background: radial-gradient(120% 120% at 50% 20%, #dbe7f5 0%, #f7e0df 60%, #f6efe8 100%);
+  }
+  .bg-art{position:fixed; inset:0; width:100%; height:100%; object-fit:contain; object-position:center; transform:translateZ(0); filter:none; opacity:1}
+
+  /* Optional light floating dots (very cheap performance) */
+  .bg-anim{position:fixed; inset:0; z-index:-1; pointer-events:none; overflow:hidden}
+  .dot{position:absolute; width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,.55); box-shadow:0 0 10px rgba(255,255,255,.35)}
+  .d1{left:14%; top:70%} .d2{right:16%; top:22%} .d3{left:28%; top:36%}
+
+  /* SECTIONS */
+  .main-container{position:relative; z-index:10}
+  .section{min-height:100svh; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:2rem 1rem; opacity:0; transform:translateY(24px); transition:opacity .6s ease, transform .6s ease}
+  .section.visible{opacity:1; transform:none}
+
+  /* Abstract translucent cards */
+  .section-content{--r1:28px; --r2:56px; --r3:24px; --r4:48px;
+    text-align:center; max-width:440px; width:100%;
+    background:rgba(255,255,255,var(--card-alpha));
+    border-radius: var(--r1) var(--r2) var(--r3) var(--r4) / 26px 42px 26px 42px;
+    padding:1.8rem 1.2rem; border:1px solid rgba(255,255,255,.35);
+    box-shadow:0 8px 22px rgba(45,37,29,.12); backdrop-filter: blur(8px);
+  }
+  .title-main{font-family:var(--serif); font-size:clamp(2.6rem,8vw,4rem); font-weight:700; color:#8B4A52; letter-spacing:-.02em; margin-bottom:.8rem; line-height:1.1}
+  .subtitle{font-size:1.02rem; color:var(--subtitle-contrast); margin-bottom:1.2rem; line-height:1.6}
+  .name-display{font-family:var(--serif); font-size:clamp(3.2rem,10vw,5rem); font-style:italic; font-weight:400; margin:1.6rem 0 .6rem; opacity:0; transform:scale(.92); transition:opacity .5s ease, transform .5s ease; background:linear-gradient(135deg,var(--powder),var(--powder-deep),var(--sage)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text}
+  .name-display.active{opacity:1; transform:scale(1)}
+
+  .poem{min-height:auto; padding:1.4rem 1rem}
+  .poem .poem-card{max-width:460px; background:rgba(255,255,255,.56); border:1px solid rgba(255,255,255,.35); border-radius:24px 40px 22px 40px / 22px 36px 22px 36px; padding:.9rem 1.1rem; text-align:center; box-shadow:0 8px 18px rgba(45,37,29,.10); backdrop-filter: blur(6px)}
+  .poem p{font-family:var(--serif); font-size:1.12rem; color:#4A3C35; line-height:1.5}
+
+  .details{width:100%; max-width:440px; margin:.6rem auto 0; background:rgba(255,255,255,.56); border-radius:20px 44px 20px 44px / 20px 36px 20px 36px; padding:.9rem 1rem; border:1px solid rgba(255,255,255,.35); backdrop-filter: blur(6px); box-shadow:0 8px 18px rgba(45,37,29,.10)}
+  .row{display:flex; align-items:center; justify-content:space-between; padding:.66rem .1rem; border-bottom:1px dashed rgba(0,0,0,.08)}
+  .row:last-child{border-bottom:none}
+  .lab{font-size:.9rem; letter-spacing:.08em; text-transform:uppercase; color:#4A3C35; font-weight:700}
+  .val{font-family:var(--serif); font-size:1.12rem; color:var(--brown); font-weight:500}
+
+  .location-card{background:rgba(255,255,255,.56); border-radius:20px 44px 20px 44px / 20px 36px 20px 36px; padding:1.2rem; margin:.6rem 0; border:1px solid rgba(255,255,255,.35); backdrop-filter: blur(6px); box-shadow:0 8px 18px rgba(45,37,29,.10)}
+  .location-title{font-family:var(--serif); font-size:1.35rem; color:#8B4A52; margin-bottom:.3rem; font-weight:600}
+  .address{color:var(--brown); line-height:1.6; font-size:1.02rem}
+
+  .actions-title{font-family:var(--serif); font-size:clamp(1.6rem,6vw,2rem); margin-bottom:.9rem; color:var(--brown)}
+  .actions-row{display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; width:100%; max-width:440px; margin:0 auto}
+  .circle-btn{display:grid; place-items:center; width:78px; height:78px; margin:0 auto; border-radius:50%; background:linear-gradient(135deg,rgba(255,255,255,.92),rgba(255,255,255,.76)); border:2px solid var(--gold-light); color:var(--brown); text-decoration:none; box-shadow:0 8px 20px rgba(45,37,29,.14); transition:transform .12s ease, box-shadow .12s ease, border-color .2s ease}
+  .circle-btn:active{transform:scale(.96)}
+  .circle-btn i{font-size:1.4rem}
+  .thanks{max-width:500px; margin:.8rem auto 0; color:#4A3C35; opacity:.9; font-size:.96rem; text-align:center}
+
+  .progress-dots{position:fixed; right:.9rem; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:.8rem; z-index:100}
+  .progress-dot{width:8px; height:8px; border-radius:50%; background:rgba(184,168,150,.35); transition:transform .3s ease, background .3s ease; cursor:pointer}
+  .progress-dot.active{background:#8B4A52; transform:scale(1.35)}
+
+  .scroll-btn{position:fixed; left:50%; bottom:18px; transform:translateX(-50%); width:42px; height:42px; border-radius:999px; background:rgba(255,255,255,.86); border:1px solid rgba(0,0,0,.08); box-shadow:0 8px 20px rgba(45,37,29,.14); display:grid; place-items:center; z-index:12; cursor:pointer; transition:transform .12s ease, box-shadow .12s ease; opacity:1}
+  .scroll-btn::before{content:""; width:12px; height:12px; border-right:2px solid rgba(80,68,60,.7); border-bottom:2px solid rgba(80,68,60,.7); transform:rotate(45deg); margin-top:-4px}
+  .scroll-btn:active{transform:translateX(-50%) scale(.96)}
+  .scroll-btn.gone{opacity:0; pointer-events:none; transform:translateX(-50%) translateY(6px) scale(.9); transition:opacity .25s ease, transform .25s ease}
+  @media (min-width:560px){ .section-content{max-width:520px} .details,.actions-row,.poem .poem-card{max-width:520px} }
+</style>
+</head>
+<body>
+  <audio id="bgm" loop preload="auto" playsinline>
+    <source src="./audio/trilha.mp3" type="audio/mpeg">
+  </audio>
+
+  <div class="bg-wrap" aria-hidden="true">
+    <picture>
+      <source srcset="./img/bg-mobile-1440x2560.webp?v=3" type="image/webp">
+      <img class="bg-art" alt="" src="./img/bg-mobile-1440x2560.jpg?v=3">
+    </picture>
+  </div>
+  <div class="bg-anim" aria-hidden="true">
+    <div class="dot d1"></div><div class="dot d2"></div><div class="dot d3"></div>
+  </div>
+
+  <div class="main-container">
+    <section class="section" id="intro">
+      <div class="section-content">
+        <h1 class="title-main">Chá Revelação</h1>
+        <p class="subtitle">Vem descobrir com a gente — leve, do nosso jeito e sem pressa. ✨</p>
+        <div class="name-display" id="nameDisplay">Laura</div>
+      </div>
+    </section>
+
+    <section class="section poem" id="poema1">
+      <div class="poem-card">
+        <p>Do tamanho de um suspiro,<br>cabe um mundo de carinho.</p>
+      </div>
+    </section>
+
+    <section class="section" id="details">
+      <div class="section-content">
+        <h2 class="title-main" style="font-size:1.8rem; color:#3D342A; margin-bottom:.6rem">Reserve na agenda</h2>
+        <div class="details">
+          <div class="row"><span class="lab">Data</span><span class="val">21/09/2025 (Domingo)</span></div>
+          <div class="row"><span class="lab">Horário</span><span class="val">15:30</span></div>
+          <div class="row"><span class="lab">Traje</span><span class="val">Tons claros</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section poem" id="poema2">
+      <div class="poem-card">
+        <p>Quem vem traz cheiro de abraço<br>e riso fácil na mão.</p>
+      </div>
+    </section>
+
+    <section class="section" id="location">
+      <div class="section-content">
+        <h2 class="title-main" style="font-size:1.8rem; color:#3D342A; margin-bottom:.6rem">Local</h2>
+        <div class="location-card">
+          <p class="address">Rua Otávio Antônio Duarte, 299<br>XV de Novembro — Tijucas • SC</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section poem" id="poema3">
+      <div class="poem-card">
+        <p>A vida muda de tom —<br>e a casa vira canção.</p>
+      </div>
+    </section>
+
+    <section class="section" id="actions">
+      <div class="section-content">
+        <h2 class="actions-title">Ações rápidas</h2>
+        <div class="actions-row">
+          <a class="circle-btn" href="https://wa.me/554899245688?text=Oi!%20Confirmo%20presen%C3%A7a%20no%20Ch%C3%A1%20Revela%C3%A7%C3%A3o." target="_blank" rel="noopener" title="Confirmar presença" aria-label="Confirmar presença"><i class="fa-solid fa-calendar-check"></i></a>
+          <a class="circle-btn" href="https://maps.app.goo.gl/AK5U1NG3bWXT1neR9" target="_blank" rel="noopener" title="Ver no mapa" aria-label="Ver no mapa"><i class="fa-solid fa-map-location-dot"></i></a>
+          <a class="circle-btn" href="https://example.com/lista-de-presentes" target="_blank" rel="noopener" title="Lista de presentes" aria-label="Lista de presentes"><i class="fa-solid fa-gift"></i></a>
+        </div>
+        <p class="thanks">Obrigado por fazer parte desse momento com a gente. Sua presença é especial — vai ser lindo ter você por perto. 💙💚</p>
+      </div>
+    </section>
+  </div>
+
+  <button class="scroll-btn" id="scrollBtn" aria-label="Ir para a próxima seção"></button>
+
+  <div class="progress-dots">
+    <div class="progress-dot active" data-target="intro"></div>
+    <div class="progress-dot" data-target="poema1"></div>
+    <div class="progress-dot" data-target="details"></div>
+    <div class="progress-dot" data-target="poema2"></div>
+    <div class="progress-dot" data-target="location"></div>
+    <div class="progress-dot" data-target="poema3"></div>
+    <div class="progress-dot" data-target="actions"></div>
+  </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  /* Alterna nomes */
+  const names={male:['Gabriel','Miguel','Arthur','Heitor','Bernardo','Theo','Davi','Lorenzo','Nicolas','Samuel'],female:['Alice','Sofia','Helena','Valentina','Laura','Isabella','Manuela','Julia','Heloisa','Luiza']};
+  let gender='female';
+  const nameDisplay=document.getElementById('nameDisplay');
+  function switchName(){
+    nameDisplay.classList.remove('active');
+    setTimeout(()=>{
+      gender=(gender==='female')?'male':'female';
+      const list=names[gender];
+      nameDisplay.textContent=list[Math.floor(Math.random()*list.length)];
+      nameDisplay.style.background=(gender==='male')
+        ? 'linear-gradient(135deg, var(--powder), var(--powder-deep), var(--sage))'
+        : 'linear-gradient(135deg, #8B4A52, #E6C368, #A55D65)';
+      nameDisplay.style.webkitBackgroundClip='text';
+      nameDisplay.style.webkitTextFillColor='transparent';
+      nameDisplay.classList.add('active');
+    },220);
+  }
+  setTimeout(()=>nameDisplay.classList.add('active'),600);
+  setInterval(switchName,3200);
+
+  /* Seções + dots */
+  const sections=[...document.querySelectorAll('.section')];
+  const dots=[...document.querySelectorAll('.progress-dot')];
+  const idByEl=new Map(sections.map(s=>[s,s.id]));
+  const io=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.classList.add('visible');
+        const id=idByEl.get(e.target);
+        dots.forEach(d=>d.classList.toggle('active', d.dataset.target===id));
+      }
+    })
+  },{threshold:.35, rootMargin:'0px 0px -20% 0px'});
+  sections.forEach(s=>io.observe(s));
+  dots.forEach(d=>d.addEventListener('click',()=>document.getElementById(d.dataset.target)?.scrollIntoView({behavior:'smooth'})));
+
+  /* Áudio */
+  const bgm=document.getElementById('bgm'); const TARGET_VOL=0.5;
+  function fadeTo(el,target=TARGET_VOL,ms=1000){const start=el.volume,diff=target-start;const steps=20,dt=ms/steps;let i=0;const t=setInterval(()=>{i++;el.volume=start+diff*(i/steps);if(i>=steps)clearInterval(t)},dt)}
+  let unlocked=false; (async()=>{try{bgm.volume=0; bgm.muted=true; await bgm.play();}catch(e){}})();
+  async function startAudio(){ if(unlocked) return; try{ if(bgm.readyState<2){bgm.load();} bgm.muted=false; if(bgm.paused){await bgm.play();} setTimeout(()=>fadeTo(bgm,TARGET_VOL,1000),1000); unlocked=true; detach(); hideArrow(); }catch(e){unlocked=false;} }
+  const events=['click','pointerdown','pointerup','touchstart','touchend','touchmove','wheel','scroll','keydown','mousedown'];
+  function attach(){events.forEach(ev=>{window.addEventListener(ev,startAudio,{capture:true}); document.addEventListener(ev,startAudio,{capture:true}); document.body&&document.body.addEventListener(ev,startAudio,{capture:true});})}
+  function detach(){events.forEach(ev=>{window.removeEventListener(ev,startAudio,{capture:true}); document.removeEventListener(ev,startAudio,{capture:true}); document.body&&document.body.removeEventListener(ev,startAudio,{capture:true});})}
+  attach();
+
+  /* Botão seta */
+  const scrollBtn=document.getElementById('scrollBtn');
+  function hideArrow(){ try{scrollBtn.classList.add('gone'); setTimeout(()=>scrollBtn.remove(), 400);}catch(e){} }
+  if(scrollBtn){
+    scrollBtn.addEventListener('click',(e)=>{e.preventDefault(); try{startAudio();}catch(_){}; const next=document.getElementById('details')||document.getElementById('poema1'); if(next){next.scrollIntoView({behavior:'smooth'});} hideArrow();},{passive:false});
+  }
+});
+</script>
+</body>
+</html>
