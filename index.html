@@ -1,14 +1,21 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Chá Revelação — Convite</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./style.css?v=4"><meta name="theme-color" content="#ffffff">
+<link rel="stylesheet" href="./style.css?v=5">
+<meta name="theme-color" content="#ffffff">
 </head>
 <body>
+<picture>
+  <source srcset="./img/bg-final-v5.webp?v=5" type="image/webp"/>
+  <img class="bg-art" src="./img/bg-final-v5.jpg?v=5" alt="Fundo com balões e nuvens" loading="eager" decoding="sync">
+</picture>
+
 <main class="container">
   <section class="section" id="capa">
     <div class="card">
@@ -17,9 +24,11 @@
       <div class="name" id="name">Laura</div>
     </div>
   </section>
+
   <section class="section">
     <div class="poem">Do tamanho de um suspiro, cabe um mundo de carinho.</div>
   </section>
+
   <section class="section" id="agenda">
     <div class="card">
       <h2 class="h1" style="font-size:clamp(28px,7vw,36px)">Reserve na agenda</h2>
@@ -30,9 +39,11 @@
       </div>
     </div>
   </section>
+
   <section class="section">
     <div class="poem">Entre nuvens e sorrisos, um coração cresce em segredo.</div>
   </section>
+
   <section class="section" id="local">
     <div class="card">
       <h2 class="h1" style="font-size:clamp(28px,7vw,36px)">Local</h2>
@@ -46,8 +57,11 @@
     </div>
   </section>
 </main>
+
 <button id="jump" aria-label="Ir para a próxima seção" title="Continuar">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
 </button>
-<script src="./script.js?v=4"></script>
-</body></html>
+
+<script src="./script.js?v=5"></script>
+</body>
+</html>
